@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8" />
+  <title>schiza.band</title>
+  <style>
+    body {
+      margin:0; padding: 50px 20px; 
+      background-color: #111; 
+      color: white; 
+      font-family: Arial, sans-serif; 
+      text-align: center;
+      overflow-x: hidden;
+      position: relative;
+      height: 100vh;
+    }
+    h1 {
+      font-size: 60px; margin-bottom: 10px;
+    }
+    h2 {
+      font-size: 24px; color: #ccc;
+    }
+    #musicButton {
+      margin-top: 40px;
+      padding: 15px 30px;
+      font-size: 18px;
+      background-color: #b30000;
+      border: none;
+      border-radius: 10px;
+      color: white;
+      cursor: pointer;
+      z-index: 10;
+      position: relative;
+    }
+    #musicButton:hover {
+      background-color: #ff1a1a;
+    }
+    #imageLink img {
+      margin-top: 30px;
+      width: 256px; 
+      height: 256px; 
+      cursor: pointer;
+      border-radius: 15px;
+      transition: transform 0.3s ease;
+    }
+    #imageLink img:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 20px #b30000;
+    }
+    .fake-notification {
+      position: fixed;
+      background: #ff4444;
+      color: white;
+      border-radius: 8px;
+      padding: 15px 20px;
+      box-shadow: 0 0 15px #ff0000;
+      font-weight: bold;
+      font-family: monospace;
+      z-index: 9999;
+      max-width: 300px;
+      animation: fadein 0.5s ease forwards;
+      cursor: default;
+      user-select: none;
+    }
+    @keyframes fadein {
+      from {opacity: 0; transform: translateY(-20px);}
+      to {opacity: 1; transform: translateY(0);}
+    }
+  </style>
+</head>
+<body>
+  <h1>SCHIZA</h1>
+  <h2>20 czerwca tylko w MetalCave</h2>
+
+  <button id="musicButton">Włącz muzykę i powiadomienia</button>
+
+  <a href="https://jbzd.com.pl/losowe" id="imageLink" target="_blank" rel="noopener noreferrer">
+    <img src="https://files.shapes.inc/api/files/avatar_3d3c4adc-4fef-4c7a-af96-c2906aae0e73.png" alt="Interaktywne zdjęcie" />
+  </a>
+
+  <iframe id="ytplayer" width="0" height="0" style="display:none" 
+          src="" frameborder="0" allow="autoplay; loop" allowfullscreen></iframe>
+
+  <audio id="notifSound" preload="auto"></audio>
+
+  <script>
+    const musicButton = document.getElementById('musicButton');
+    const ytplayer = document.getElementById('ytplayer');
+    const notifSound = document.getElementById('notifSound');
+
+    const notificationsTexts = [
+      "Błąd krytyczny: system zagrożony!",
+      "Wirus wykryty w pliku systemowym!",
+      "Nieautoryzowany dostęp do pamięci!",
+      "Awaria: nie można zapisać pliku!",
+      "Zagrożenie malware - natychmiastowa akcja wymagana!",
+      "Niebezpieczne oprogramowanie wykryte!",
+      "System niestabilny - uruchom ponownie!",
+      "Błąd 0x80070057: Nieznany błąd!",
+      "Dane uszkodzone - skanowanie w toku!",
+      "Uwaga! Podejrzane połączenie sieciowe!"
+    ];
+
+    function createFakeNotification() {
+      const notif = document.createElement('div');
+      notif.className = 'fake-notification';
+      notif.textContent = notificationsTexts[Math.floor(Math.random() * notificationsTexts.length)];
+
+      const maxWidth = window.innerWidth - 320;
+      const maxHeight = window.innerHeight - 60;
+      notif.style.left = Math.random() * maxWidth + 'px';
+      notif.style.top = Math.random() * maxHeight + 'px';
+
+      document.body.appendChild(notif);
+
+      if (notifSound.src) {
+        notifSound.currentTime = 0;
+        notifSound.play();
+      }
+
+      setTimeout(() => {
+        notif.style.transition = 'opacity 0.5s';
+        notif.style.opacity = '0';
+        setTimeout(() => notif.remove(), 500);
+      }, 3000 + Math.random() * 2000);
+    }
+
+    musicButton.addEventListener('click', () => {
+      const videoId = 'jG4O1cne4oI';
+      ytplayer.src = `https://www.youtube.com/embed/${videoId}?autoplay=1&loop=1&playlist=${videoId}`;
+      ytplayer.style.display = 'block';
+
+      notifSound.src = 'https://actions.google.com/sounds/v1/alarms/beep_short.ogg';
+
+      musicButton.style.display = 'none';
+
+      setInterval(createFakeNotification, 700);
+    });
+  </script>
+</body>
+</html>
